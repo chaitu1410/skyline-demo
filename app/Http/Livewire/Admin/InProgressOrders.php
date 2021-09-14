@@ -1,23 +1,21 @@
 <?php
 
-namespace App\View\Components\admin;
+namespace App\Http\Livewire\Admin;
 
 use App\Models\Order;
-use Illuminate\View\Component;
+use Livewire\Component;
+use Livewire\WithPagination;
 
-class OrdersInProgress extends Component
+class InProgressOrders extends Component
 {
+
     public $query;
-    public function __construct($query = "")
+    public function mount($query = "")
     {
         $this->query = $query;
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
+    use WithPagination;
     public function render()
     {
         $orders = Order::query();
@@ -31,6 +29,6 @@ class OrdersInProgress extends Component
             $q->orWhere('company', 'like', '%' . $this->query . '%');
         });
         $data['orders'] = $orders->orderBy('created_at', 'desc')->paginate(10);
-        return view('components.admin.orders-in-progress', $data);
+        return view('livewire.admin.in-progress-orders', $data);
     }
 }

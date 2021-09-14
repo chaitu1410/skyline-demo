@@ -1,28 +1,21 @@
 <?php
 
-namespace App\View\Components\admin;
+namespace App\Http\Livewire\Admin;
 
+use Livewire\Component;
 use App\Models\ReturnOrder;
-use Illuminate\View\Component;
+use Livewire\WithPagination;
 
 class ReturnedOrders extends Component
 {
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
+
     public $query;
-    public function __construct($query = "")
+    public function mount($query = "")
     {
         $this->query = $query;
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
+    use WithPagination;
     public function render()
     {
         $returnorders = ReturnOrder::query();
@@ -30,6 +23,6 @@ class ReturnedOrders extends Component
             $q->where('id', 'like', '%' . $this->query . '%');
         });
         $data['returnorders'] = $returnorders->orderBy('created_at', 'desc')->paginate(10);
-        return view('components.admin.returned-orders', $data);
+        return view('livewire.admin.returned-orders', $data);
     }
 }
