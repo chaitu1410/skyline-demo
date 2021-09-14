@@ -76,7 +76,7 @@
                 <div id="alldatatable" class="tab-content pt-4" id="proTabContent">
 
                     @if ($status == config('constants.orderStatus.ordered'))
-                        <x-admin.new-orders :query="$query"/>
+                        @livewire('admin.new-orders')
                     @elseif($status == config('constants.orderStatus.delivered'))
                         <x-admin.delivered-orders :query="$query"/>
                     @elseif($status == config('constants.orderStatus.cancelled'))
