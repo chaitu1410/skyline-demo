@@ -13,10 +13,10 @@ class NewOrders extends Component
      *
      * @return void
      */
-    public $query;
+    //public $query;
     public function __construct($query = "")
     {
-        $this->query = $query;
+        //$this->query = $query;
     }
 
     /**
@@ -28,11 +28,11 @@ class NewOrders extends Component
     {
         $orders = Order::query();
         $orders->where('status', '=', config('constants.orderStatus.ordered'));
-        $orders->whereHas('OrderDetail', function ($q) {
-            $q->where('customerName', 'like', '%' . $this->query . '%');
-            $q->orWhere('customerContact', 'like', '%' . $this->query . '%');
-            $q->orWhere('company', 'like', '%' . $this->query . '%');
-        });
+        //$orders->whereHas('OrderDetail', function ($q) {
+        //  $q->where('customerName', 'like', '%' . $this->query . '%');
+        //  $q->orWhere('customerContact', 'like', '%' . $this->query . '%');
+        //  $q->orWhere('company', 'like', '%' . $this->query . '%');
+        //});
         $data['orders'] = $orders->orderBy('created_at', 'desc')->paginate(10);
         return view('components.admin.new-orders', $data);
     }
