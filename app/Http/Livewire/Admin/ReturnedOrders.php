@@ -20,6 +20,7 @@ class ReturnedOrders extends Component
     {
         $returnorders = ReturnOrder::query();
         $returnorders->whereHas('order', function ($q) {
+            $q->where('isPaid', true);
             $q->where('id', 'like', '%' . $this->query . '%');
         });
         $data['returnorders'] = $returnorders->orderBy('created_at', 'desc')->paginate(10);

@@ -18,7 +18,10 @@ class OrdersController extends Controller
 {
     public function index()
     {
-        $data['orders'] = Auth::user()->orders()->orderBy('created_at', 'desc')->get();
+        $data['orders'] = Auth::user()->orders()
+            ->where('isPaid', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('orders.index', $data);
     }
 

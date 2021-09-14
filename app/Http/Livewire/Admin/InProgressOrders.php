@@ -19,6 +19,7 @@ class InProgressOrders extends Component
     public function render()
     {
         $orders = Order::query();
+        $orders->where('isPaid', true);
         $orders->where('status', '=', config('constants.orderStatus.accepted'))
             ->orWhere('status', '=', config('constants.orderStatus.shipped'))
             ->orWhere('status', '=', config('constants.orderStatus.packed'))

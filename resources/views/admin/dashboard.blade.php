@@ -69,7 +69,7 @@
           </div>
           <div class="dbboxright">
             <div class="dbboxcount">
-              <p class="mb-0">1000</p>
+              <p class="mb-0">{{ $totalOrders }}</p>
             </div>
             <div class="dbboxname">
               <p class="mb-0">Total Orders</p>
@@ -84,7 +84,7 @@
         </div>
       </div>
 
-      <div class="dbboxouter" onclick="location.href='quoterequests.html'">
+      <div class="dbboxouter">
         <div class="dbbox">
           <div class="dbboxleft">
             <div class="dbicon">
@@ -95,7 +95,7 @@
           </div>
           <div class="dbboxright">
             <div class="dbboxcount">
-              <p class="mb-0">50</p>
+              <p class="mb-0">{{ $totalQuotes }}</p>
             </div>
             <div class="dbboxname">
               <p class="mb-0">Quote Requests</p>

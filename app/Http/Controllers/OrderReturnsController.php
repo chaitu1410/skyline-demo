@@ -13,7 +13,10 @@ class OrderReturnsController extends Controller
 {
     public function index(Request $request)
     {
-        $data['returnedorders'] = Auth::user()->returnOrders()->orderBy('created_at', 'desc')->get();
+        $data['returnedorders'] = Auth::user()->returnOrders()
+            ->where('isPaid', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('orders.return.index', $data);
     }
 

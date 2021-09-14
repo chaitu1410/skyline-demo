@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EditContactDetailRequest;
 use App\Models\Banner;
 use App\Models\ContactDetail;
+use App\Models\Order;
+use App\Models\Quote;
 
 class AdminsController extends Controller
 {
@@ -16,6 +18,8 @@ class AdminsController extends Controller
     {
         $data['totalUsers'] = User::count();
         $data['totalProducts'] = Product::count();
+        $data['totalOrders'] = Order::where('isPaid', true)->count();
+        $data['totalQuotes'] = Quote::count();
         $data['banners'] = Banner::all();
         return view('admin.dashboard', $data);
     }

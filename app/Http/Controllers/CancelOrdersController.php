@@ -12,6 +12,7 @@ class CancelOrdersController extends Controller
     public function index()
     {
         $data['orders'] = Auth::user()->orders()
+            ->where('isPaid', true)
             ->where('status', '=', config('constants.orderStatus.cancelled'))
             ->orderBy('created_at', 'desc')
             ->get();

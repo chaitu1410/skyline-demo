@@ -18,6 +18,7 @@ class NewOrders extends Component
     public function render()
     {
         $orders = Order::query();
+        $orders->where('isPaid', true);
         $orders->where('status', '=', config('constants.orderStatus.ordered'));
         $orders->whereHas('OrderDetail', function ($q) {
             $q->where('customerName', 'like', '%' . $this->query . '%');
