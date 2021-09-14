@@ -35,6 +35,9 @@
         },
         "files": [
             "app/helpers.php"
+        ],
+        "classmap": [
+            "app/Http/Controllers/Admin"
         ]
     },
     "autoload-dev": {
