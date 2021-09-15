@@ -10,6 +10,8 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditProductRequest;
 use App\Http\Requests\EditVarientRequest;
@@ -29,6 +31,7 @@ class ProductsController extends Controller
     public function store(StoreProductRequest $request, Category $category)
     {
         try {
+            DB::beginTransaction();
             $subcategory = $request->get('subcategory');
             if ($subcategory && !(Subcategory::where('id', $subcategory)->exists())) {
                 $request->session()->flash('error', 'Subcategory doesn\'t exists');
@@ -94,13 +97,15 @@ class ProductsController extends Controller
                     $img->move(public_path('images'), $imgName);
                 }
             }
-
+            DB::commit();
             $request->session()->flash('success', 'Product added to ' . $category->name . ' category!');
             if ($subcategory) {
                 return redirect(route('admin.categories.showSubcategory', ['category' => $category->id, 'subcategory' => $subcategory]));
             }
             return redirect(route('admin.categories.show', ['category' => $category->id]));
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to add product');
             return redirect(route('admin.categories.show', ['category' => $category->id]));
         }
@@ -120,7 +125,8 @@ class ProductsController extends Controller
             $data['brands'] = Brand::select('id', 'name')->get();
             $data['category'] = $product->category;
             return view('admin.products.edit', $data);
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Currntly cannot edit product');
             return back();
         }
@@ -129,6 +135,7 @@ class ProductsController extends Controller
     public function update(EditProductRequest $request, Product $product)
     {
         try {
+            DB::beginTransaction();
             $subcategoryId = $request->get('subcategory');
             if ($subcategoryId && !(Subcategory::where('id', $subcategoryId)->exists())) {
                 $request->session()->flash('error', 'Subcategory doesn\'t exists');
@@ -203,8 +210,8 @@ class ProductsController extends Controller
 
                 $oldImages = $product->productImages;
                 foreach ($oldImages as $oldImage) {
-                    $oldImage->delete();
                     deleteImage($oldImage->image);
+                    $oldImage->delete();
                 }
 
                 $images = $request->file('images');
@@ -217,13 +224,15 @@ class ProductsController extends Controller
                     $img->move(public_path('images'), $imgName);
                 }
             }
-
+            DB::commit();
             $request->session()->flash('success', 'Product updated successfully!');
             if ($subcategoryId) {
                 return redirect(route('admin.categories.showSubcategory', ['category' => $categoryId, 'subcategory' => $subcategoryId]));
             }
             return redirect(route('admin.categories.show', ['category' => $categoryId]));
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to edit product');
             return redirect(route('admin.categories.show', ['category' => $categoryId]));
         }
@@ -237,6 +246,7 @@ class ProductsController extends Controller
     public function storeVarient(StoreVarientRequest $request, Product $product)
     {
         try {
+            DB::beginTransaction();
             $varient = $product->varients()->create([
                 'name' => $request->get('name'),
                 'slug' => slug($request->get('name')),
@@ -259,8 +269,11 @@ class ProductsController extends Controller
                     }
                 }
             }
+            DB::commit();
             $request->session()->flash('success', 'Varient added successfully!');
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to add varient');
         }
         return back();
@@ -269,6 +282,7 @@ class ProductsController extends Controller
     public function updateVarient(EditVarientRequest $request, Product $product, Varient $varient)
     {
         try {
+            DB::beginTransaction();
             $varient->update([
                 'name' => $request->get('name'),
                 'slug' => slug($request->get('name')),
@@ -290,10 +304,12 @@ class ProductsController extends Controller
                     }
                 }
             }
-
+            DB::commit();
             $request->session()->flash('success', 'Varient updated successfully!');
-        } catch (Exception $ex) {
-            $request->session()->flash('error', 'Failed to edit varient');
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            $request->session()->flash('error', 'Failed to update varient');
         }
         return back();
     }
@@ -301,9 +317,20 @@ class ProductsController extends Controller
     public function destroy(Request $request, Product $product)
     {
         try {
+            DB::beginTransaction();
+            deleteImage($product->image);
+            $images = $product->productImages;
+            foreach ($images as $image) {
+                deleteImage($image->image);
+                $image->delete();
+            }
+            deleteFile($product->manual);
             $product->delete();
+            DB::commit();
             $request->session()->flash('success', 'Product deleted succesfully!');
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to delete product');
         }
         return back();

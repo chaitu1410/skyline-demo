@@ -14,7 +14,7 @@
 </nav>
 <!-- breadcrumb ends -->
 
-
-@livewire('brand-product-list', ['query' => $query, 'brand' => $brand->id])
+<livewire:brand-product-list :query="$query" :brand="$brand->id">
+{{-- @livewire('brand-product-list', ['query' => $query, 'brand' => $brand->id]) --}}
 
 @endsection

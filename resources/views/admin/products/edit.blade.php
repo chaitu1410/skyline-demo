@@ -96,19 +96,19 @@
         <div class="row mt-4">
           <div class="mb-3 col-md-6 col-lg-3">
             <label class="form-label small">MRP:</label>
-            <input type="text" name="mrp" min="0" step="1" class="form-control form-control-sm" value="{{ $product->mrp }}">
+            <input type="text" name="mrp" min="0" step="1" id="mrp" onchange="calculate()" class="form-control form-control-sm" value="{{ $product->mrp }}">
           </div>
           <div class="mb-3 col-md-6 col-lg-3">
             <label class="form-label small">Discount :</label>
-            <input type="text" name="discount" min="0" step=".01" class="form-control form-control-sm" value="{{ $product->discount }}">
+            <input type="text" name="discount" min="0" step=".01" id="discount" onchange="calculate()" class="form-control form-control-sm" value="{{ $product->discount }}">
           </div>
           <div class="mb-3 col-md-6 col-lg-3">
             <label class="form-label small">GST :</label>
-            <input type="text" name="gst" min="0" step=".01" class="form-control form-control-sm" value="{{ $product->gst }}">
+            <input type="text" name="gst" min="0" step=".01" id="gst" onchange="calculate()" class="form-control form-control-sm" value="{{ $product->gst }}">
           </div>
           <div class="mb-3 col-md-6 col-lg-3">
             <label class="form-label small">Selling Price :</label>
-            <input type="text" name="sellingPrice" min="0" step="1" class="form-control form-control-sm" value="{{ $product->sellingPrice }}">
+            <input type="text" name="sellingPrice" min="0" step="1" id="sellingPrice" class="form-control form-control-sm" value="{{ $product->sellingPrice }}" readonly>
           </div>
 
           <div class="mb-3 mt-3 col-sm-2 col-md-6">
@@ -208,4 +208,24 @@
 
 </div>
 <!-- Page content ends-->
+@push('scripts')
+    <script>
+      function calculate(){
+        var mrp = document.getElementById("mrp").value;
+        var gst = document.getElementById("gst").value;
+        var discount = document.getElementById("discount").value;
+        var sellingPrice = document.getElementById("sellingPrice");
+
+        if(mrp && gst && discount){
+          mrp = Number.parseFloat(mrp);
+          gst = Number.parseFloat(gst);
+          discount = Number.parseFloat(discount);
+          var gstAmount = (gst * mrp) / 100;
+          var discountAmount = (discount * mrp) / 100;
+          sellingPrice.value = (mrp + gstAmount) - discountAmount;
+        }
+      }
+      
+    </script>
+  @endpush
   @endsection

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Exception;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditBrandRequest;
 use App\Http\Requests\StoreBrandRequest;
@@ -13,6 +15,7 @@ class BrandsController extends Controller
 {
     public function index(Request $request)
     {
+
         $query = $request->get('query') ?? '';
         $brands = Brand::query();
         $brands->where('name', 'like', '%' . $query . '%');
@@ -24,6 +27,7 @@ class BrandsController extends Controller
     public function store(StoreBrandRequest $request)
     {
         try {
+            DB::beginTransaction();
             $slug = slug($request->get('name'));
             $imageName = $slug . '.' . $request->file('image')->extension();
             Brand::create([
@@ -32,8 +36,11 @@ class BrandsController extends Controller
                 'image' => $imageName,
             ]);
             $request->file('image')->move(public_path('images'), $imageName);
+            DB::commit();
             $request->session()->flash('success', 'Brand added successfully!');
         } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to add brand');
         }
         return back();
@@ -57,6 +64,7 @@ class BrandsController extends Controller
             ]);
             $request->session()->flash('success', 'Brand updated successfully!');
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to update brand');
         }
         return back();
@@ -69,6 +77,7 @@ class BrandsController extends Controller
             $brand->delete();
             $request->session()->flash('success', 'Brand deleted successfully!');
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to delete brand');
         }
         return back();

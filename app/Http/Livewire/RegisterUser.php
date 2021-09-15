@@ -14,6 +14,11 @@ class RegisterUser extends Component
     public $otp = "";
     public $verified = false;
 
+    public function mount()
+    {
+        $this->mobile = old('mobile') ?? "";
+    }
+
     public function getOTP()
     {
         if (!validatePhoneNumber($this->mobile)) {
@@ -30,12 +35,6 @@ class RegisterUser extends Component
         $record = Otp::where('mobile', '=', $this->mobile)->first();
         $otp = strval(rand(100000, 999999));
         $time = Carbon::now()->subMinutes(15)->toDateTimeString();
-        // $API_KEY = '5c4d03c7-094d-11ec-a13b-0200cd936042';
-        // $url = 'https://2factor.in/API/V1/' . $API_KEY . '/SMS/' . $this->mobile . '/' . $otp . '/' . 'otp';
-        // dd([
-        //     '+15' => Carbon::now()->subMinutes(15)->toDateTimeString(),
-        //     'updated_at' => $record->updated_at
-        // ]);
 
         if ($record !== null) {
             if (!($record->updated_at >= $time)) {

@@ -2,89 +2,48 @@
 
 namespace App\Http\Livewire\Admin;
 
+use Exception;
 use Livewire\Component;
+use Illuminate\Support\Facades\Http;
 
 class PincodeForm extends Component
 {
-    public $states;
-    public $cities;
+    public $states = [];
+    public $cities = [];
     public $selectedState;
     public $selectedCity;
+    public $state;
+    public $city;
     public $pincode;
     public $validPincode = false;
     public $deliveryCharge;
 
     public function mount()
     {
-        $this->states = collect([
-            [
-                'id' => '1',
-                'name' => 'Andhrapradesh'
-            ],
-            [
-                'id' => '2',
-                'name' => 'Himachalpraesh'
-            ],
-            [
-                'id' => '3',
-                'name' => 'Jharkhand'
-            ],
-            [
-                'id' => '4',
-                'name' => 'Karnataka'
-            ],
-            [
-                'id' => '5',
-                'name' => 'Madhyapradesh'
-            ],
-            [
-                'id' => '6',
-                'name' => 'Maharashtra'
-            ],
-            [
-                'id' => '7',
-                'name' => 'Uttarpradesh'
-            ],
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'X-CSCAPI-KEY' => env('CITY_STATE_API_ACCESS_KEY')
+            ])->accept('application/json')->get('https://api.countrystatecity.in/v1/countries/IN/states', [
+                'method' => 'GET',
+                'redirect' => 'follow'
+            ]);
+            if ($response->failed()) {
+                request()->session()->flash('state', 'Failed to fetch data. Try Again.');
+                return redirect(url()->current());
+            }
+            $this->states = $response->collect();
+        } catch (Exception $e) {
+            request()->session()->flash('state', 'Failed to fetch data. Try Again.');
+        }
     }
 
     public function updatedSelectedState($value)
     {
-        $this->resetCities();
         if ($value == "-1") {
             $this->syncInput('selectedState', null);
         }
-
-        $this->cities = collect([
-            [
-                'id' => '1',
-                'name' => 'Mumbai'
-            ],
-            [
-                'id' => '2',
-                'name' => 'Pune'
-            ],
-            [
-                'id' => '3',
-                'name' => 'Delhi'
-            ],
-            [
-                'id' => '4',
-                'name' => 'Benglore'
-            ],
-            [
-                'id' => '5',
-                'name' => 'Hydrabad'
-            ],
-            [
-                'id' => '6',
-                'name' => 'Chennai'
-            ],
-            [
-                'id' => '7',
-                'name' => 'Aurangabad'
-            ],
-        ]);
+        $this->resetPincode();
+        $this->resetCities();
     }
 
     public function updatedSelectedCity($value)
@@ -97,8 +56,31 @@ class PincodeForm extends Component
 
     public function resetCities()
     {
-        $this->cities = null;
-        $this->selectedCity = null;
+        try {
+            if ($this->selectedState) {
+                $state = $this->states->where('name', $this->selectedState)->first();
+                if ($state) {
+                    $response = Http::withHeaders([
+                        'X-CSCAPI-KEY' => env('CITY_STATE_API_ACCESS_KEY')
+                    ])->accept('application/json')->get('https://api.countrystatecity.in/v1/countries/IN/states/' . $state['iso2'] . '/cities', [
+                        'method' => 'GET',
+                        'redirect' => 'follow'
+                    ]);
+                    if ($response->failed()) {
+                        request()->session()->flash('city', 'Failed to fetch data. Try Again.');
+                        return redirect(url()->current());
+                    }
+                    $this->cities = $response->collect();
+                } else {
+                    $this->cities = null;
+                }
+            } else {
+                $this->cities = null;
+            }
+            $this->selectedCity = null;
+        } catch (Exception $e) {
+            request()->session()->flash('city', 'Failed to fetch data. Try Again.');
+        }
     }
 
     public function resetPincode()

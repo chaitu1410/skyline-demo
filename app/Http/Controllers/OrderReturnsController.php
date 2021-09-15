@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\ReturnOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreReturnOrderRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreReturnOrderRequest;
 
 class OrderReturnsController extends Controller
 {
     public function index(Request $request)
     {
-        $data['returnedorders'] = Auth::user()->returnOrders()
-            ->where('isPaid', true)
-            ->orderBy('created_at', 'desc')
+        $returnedorders = Auth::user()->returnOrders()
+            ->whereHas('Order', function ($q) {
+                $q->where('isPaid', true);
+            })
+            ->orderBy('updated_at', 'desc')
             ->get();
+        $data['returnedorders'] = $returnedorders;
         return view('orders.return.index', $data);
     }
 
@@ -68,7 +71,9 @@ class OrderReturnsController extends Controller
             $request->session()->flash('success', 'Return order request seent successfully!');
         } catch (Exception $e) {
             DB::rollback();
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to place return order request');
+            return back();
         }
         return redirect(route('orders.return.index'));
     }

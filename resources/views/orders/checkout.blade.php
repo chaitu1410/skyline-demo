@@ -100,6 +100,7 @@
                     </p>
                     
                     <p class="orderplacecosts small">
+                        <span>Delivery Charge :</span>
                         <span>{{ $order->orderDetail->deliveryCharge }}</span>
                     </p>
   

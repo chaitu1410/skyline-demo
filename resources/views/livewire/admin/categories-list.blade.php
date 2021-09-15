@@ -4,7 +4,7 @@
     <div id="allcategories">
 
         @forelse ($categories as $category)
-            <div class="categoryitemcont">
+            <div wire:key="{{ $category->id }}" class="categoryitemcont">
                 <div class="categoryitem" onclick="location.href='category.html'">
                     <div class="categoryimg">
                         <img src="{{ asset('images/'.$category->image) }}" alt="">

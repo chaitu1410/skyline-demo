@@ -26,7 +26,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'mobile' => ['required', 'digits:10'],
-            'mobile2' => ['required', 'digits:10'],
+            'mobile2' => ['nullable', 'digits:10'],
             'pincode' => ['required', 'regex:/^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$/', 'exists:pincodes,pincode'],
             'town' => ['required', 'string', 'max:255'],
             'area' => ['required', 'string', 'max:255'],
@@ -47,7 +47,6 @@ class StoreOrderRequest extends FormRequest
             'mobile.required' => 'Please enter first mobile number',
             'mobile.digits' => 'Please enter valid first mobile number',
 
-            'mobile2.required' => 'Please enter second mobile number',
             'mobile2.digits' => 'Please enter valid second mobile number',
 
 

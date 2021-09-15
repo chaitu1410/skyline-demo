@@ -14,7 +14,8 @@
 </nav>
 <!-- breadcrumb ends -->
 
-@livewire('product-list', ['query' => $query])
+<livewire:product-list :query="$query">
+{{-- @livewire('product-list', ['query' => $query]) --}}
 
 <!-- filter sidebar ends -->
 

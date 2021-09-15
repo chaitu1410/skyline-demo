@@ -37,7 +37,7 @@ function deleteFile($path)
 
 function sendSMS($mobile, $otp, $template)
 {
-    $API_KEY = '5c4d03c7-094d-11ec-a13b-0200cd936042';
+    $API_KEY = env('SMS_HOST_API_KEY');
     $url = 'https://2factor.in/API/V1/' . $API_KEY . '/SMS/' . $mobile . '/' . $otp . '/' . $template;
     try {
         return Http::get($url);
@@ -48,7 +48,12 @@ function sendSMS($mobile, $otp, $template)
 
 function sendOrderStatusSMS($mobile, $id, $status)
 {
-    $API_KEY = '5c4d03c7-094d-11ec-a13b-0200cd936042';
+    return true;
+}
+
+function sendOrderStatusSMS1($mobile, $id, $status)
+{
+    $API_KEY = env('SMS_HOST_API_KEY');
     $url = 'https://2factor.in/API/V1/' . $API_KEY . '/ADDON_SERVICES/SEND/TSMS';
     $header = [
         'From' => 'SKYORD',

@@ -67,7 +67,7 @@
                         <p class="prodname">{{ $product->name }}</p>
                     </a>
                     <img src="{{ asset('images/'.$product->brand->image) }}" alt="{{ $product->brand->name }}">
-                    <p class="mb-0 text-success prodprice"><span class="cutprice text-danger">₹{{ $product->mrp }} </span> ₹{{ $product->sellingPrice }} </p>
+                    <p class="mb-0 text-success prodprice"><span class="cutprice text-danger">₹{{ $product->mrp }} </span> ₹{{ $product->discountedPrice() }} </p>
                     </div>
                 </div>
                 <div class="modal fade" id="quickviewproductmodal{{ $product->id }}" tabindex="-1" aria-labelledby="quickviewproductmodalLabel"
@@ -155,7 +155,8 @@
     <div class="b-example-divider"></div>
 
     <!-- products categorywise in tab pane start-->
-    @livewire('best-seller-category')
+    <livewire:best-seller-category>
+    {{-- @livewire('best-seller-category') --}}
     <!-- products categorywise in tab pane end-->
 
     <div class="b-example-divider"></div>

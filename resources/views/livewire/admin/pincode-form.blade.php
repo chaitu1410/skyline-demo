@@ -7,11 +7,16 @@
             <select id="states" name="state" class="form-select form-select-sm" aria-label=".form-select-sm example" wire:model="selectedState">
                 <option value="-1">Open this select menu</option>
                 @forelse ($states as $state)
-                    <option value="{{ $state['name'] }}">{{ $state['name'] }}</option>    
+                    <option wire:key="{{ $state['id'] }}" value="{{ $state['name'] }}">{{ $state['name'] }}</option>    
                 @empty
                     
                 @endforelse
             </select>
+            @if (session()->has('state'))
+                <span class="text-danger">
+                    {{ session('state') }}
+                </span>
+            @endif
         </div>
         @if ($selectedState)     
             <div class="mb-3">
@@ -20,11 +25,16 @@
                 <select id="cities" name="city" class="form-select form-select-sm" aria-label=".form-select-sm example" wire:model="selectedCity">
                     <option value="-1">Open this select menu</option>
                     @forelse ($cities as $city)
-                        <option value="{{ $city['name'] }}">{{ $city['name'] }}</option>    
+                        <option wire:key="{{ $city['id'] }}" value="{{ $city['name'] }}">{{ $city['name'] }}</option>    
                     @empty
                         
                     @endforelse
                 </select>
+                @if (session()->has('city'))
+                    <span class="text-danger">
+                        {{ session('city') }}
+                    </span>
+                @endif
             </div>
         @endif
 

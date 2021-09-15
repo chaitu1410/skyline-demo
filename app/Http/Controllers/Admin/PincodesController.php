@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use App\Models\Pincode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditPincodeRequest;
 use App\Http\Requests\StorePincodeRequest;
-use Exception;
 
 class PincodesController extends Controller
 {
@@ -38,6 +39,7 @@ class PincodesController extends Controller
             ]);
             $request->session()->flash('success', 'City added successfully!');
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to add city');
         }
         return redirect(route('admin.pincodes.index'));
@@ -53,6 +55,7 @@ class PincodesController extends Controller
             ]);
             $request->session()->flash('success', 'Pincode updated successfully!');
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to add pincode');
         }
         return redirect(route('admin.pincodes.index'));
@@ -64,6 +67,7 @@ class PincodesController extends Controller
             $pincode->delete();
             request()->session()->flash('success', 'City deleted successfully!');
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             request()->session()->flash('error', 'Failed to delete city');
         }
         return redirect(route('admin.pincodes.index'));

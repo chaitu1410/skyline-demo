@@ -7,7 +7,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
   <title>Skyline | Admin</title>
-  @livewireStyles
+  <livewire:styles />
 
   <!-- Favicons -->
   <link href="{{ asset('assets/admin/images/favicon.png') }}" rel="icon">
@@ -71,12 +71,11 @@
 
     </div>
   </div>
-  
+  <livewire:scripts />
   @stack('scripts')
   <!-- Core theme JS-->
   <script src="{{ asset('assets/admin/js/scripts.js') }}"></script>
   <script src="{{ asset('assets/admin/js/calendar.js') }}"></script>
-  @livewireScripts
 </body>
 
 </html>

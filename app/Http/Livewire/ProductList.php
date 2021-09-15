@@ -47,27 +47,27 @@ class ProductList extends Component
     {
         $products = Product::query();
 
-        $products->where('name', 'like', '%'.$this->query.'%');
+        $products->where('name', 'like', '%' . $this->query . '%');
 
-        if($this->sort === "LATEST"){
+        if ($this->sort === "LATEST") {
             $products->orderBy('created_at', 'DESC');
-        }elseif($this->sort === "ASC" || $this->sort === "DESC"){
+        } elseif ($this->sort === "ASC" || $this->sort === "DESC") {
             $products->orderBy('sellingPrice', $this->sort);
         }
 
-        if($this->category){
+        if ($this->category) {
             $products->where('category_id', '=', $this->category);
         }
 
-        if($this->subcategory){
+        if ($this->subcategory) {
             $products->where('subcategory_id', '=', $this->subcategory);
         }
 
-        if($this->brand){
+        if ($this->brand) {
             $products->where('brand_id', '=', $this->brand);
         }
 
-        if($this->min && $this->max && is_numeric($this->min) && is_numeric($this->max) && $this->min < $this->max){
+        if ($this->min && $this->max && is_numeric($this->min) && is_numeric($this->max) && $this->min < $this->max) {
             $products->whereBetween('sellingPrice', [$this->min, $this->max]);
         }
 

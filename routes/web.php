@@ -56,8 +56,8 @@ Route::get('/quotes/create', [QuotesController::class, 'create'])->name('quotes.
 Route::post('/quotes', [QuotesController::class, 'store'])->name('quotes.store')->middleware(['auth']);
 
 ## Users Related Routes
-Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit')->middleware(['auth']);
-Route::patch('/users/{user}', [UsersController::class, 'update'])->name('users.update')->middleware(['auth']);
+Route::get('/users/edit', [UsersController::class, 'edit'])->name('users.edit')->middleware(['auth']);
+Route::patch('/users', [UsersController::class, 'update'])->name('users.update')->middleware(['auth']);
 
 ## Carts Related Routes
 Route::get('/cart', [CartsController::class, 'index'])->name('carts.index')->middleware(['auth']);
@@ -66,7 +66,7 @@ Route::get('/cart', [CartsController::class, 'index'])->name('carts.index')->mid
 Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index')->middleware(['auth']);
 Route::get('/orders/confirm', [OrdersController::class, 'confirm'])->name('orders.confirm')->middleware(['auth']);
 Route::post('/orders/place', [OrdersController::class, 'placeOrder'])->name('orders.placeOrder')->middleware(['auth']);
-Route::get('/orders/{order}/checkout', [OrdersController::class, 'checkout'])->name('orders.checkout')->middleware(['auth']);
+Route::get('/orders/{order}/checkout', [OrdersController::class, 'checkout'])->name('orders.checkout')->middleware(['auth', 'can:view,order']);
 Route::post('/orders/pay', [OrdersController::class, 'pay'])->name('orders.pay')->middleware(['auth']);
 Route::get('/orders/invoice/{order}', [OrdersController::class, 'invoice'])->name('orders.invoice')->middleware(['auth', 'can:view,order']);
 

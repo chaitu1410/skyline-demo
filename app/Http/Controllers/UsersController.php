@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EditUserRequest;
 
@@ -16,24 +17,32 @@ class UsersController extends Controller
         return view('users.edit', $data);
     }
 
-    public function update(EditUserRequest $request, User $user)
+    public function update(EditUserRequest $request)
     {
-        $user->update([
-            'name' => $request->get('name'),
-            'mobile2' => $request->get('mobile2'),
-            'gstNumber' => $request->get('gst'),
-            'company' => $request->get('company'),
-        ]);
+        try {
+            DB::beginTransaction();
+            $user = Auth::user();
+            $user->update([
+                'name' => $request->get('name'),
+                'mobile2' => $request->get('mobile2'),
+                'gstNumber' => $request->get('gst'),
+                'company' => $request->get('company'),
+            ]);
 
-        $user->address()->update([
-            'pincode' => $request->get('pincode'),
-            'town' => $request->get('town'),
-            'area' => $request->get('area'),
-            'houseNumber' => $request->get('houseNumber'),
-            'landmark' => $request->get('landmark'),
-        ]);
-
-        $request->session()->flash('success', 'Profile updated successfully!');
+            $user->address()->update([
+                'pincode' => $request->get('pincode'),
+                'town' => $request->get('town'),
+                'area' => $request->get('area'),
+                'houseNumber' => $request->get('houseNumber'),
+                'landmark' => $request->get('landmark'),
+            ]);
+            DB::commit();
+            $request->session()->flash('success', 'Profile updated successfully!');
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            $request->session()->flash('error', 'Failed to update profile');
+        }
         return back();
     }
 }

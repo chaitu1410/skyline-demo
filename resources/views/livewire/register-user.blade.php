@@ -28,7 +28,7 @@
         </label>
         <div id="inputforgetotp">
             <div class="inputforgetotpip">
-                <input type="text" class="form-control" id="exampleFormControlInput2" name="otp" wire:model="otp">
+                <input type="text" class="form-control" id="exampleFormControlInput2" name="otp" wire:model="otp" autocomplete="off">
             </div>
            <div class="inputforgetotpbtn">
             <button id="getotpbtn" class="btn btn-success"  wire:click.prevent="verifyOTP">Verify</button>

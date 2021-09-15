@@ -15,6 +15,7 @@
 </nav>
 <!-- breadcrumb ends -->
 
-@livewire('category-product-list', ['query' => $query, 'category' => $category->id])
+<livewire:category-product-list :query="$query" :category="$category->id">
+{{-- @livewire('category-product-list', ['query' => $query, 'category' => $category->id]) --}}
 
 @endsection

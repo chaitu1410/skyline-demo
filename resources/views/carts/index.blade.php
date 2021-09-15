@@ -14,8 +14,8 @@
     </ol>
   </nav>
   <!-- breadcrumb ends -->
-
-  @livewire('cart-list')
+  <livewire:cart-list>
+  {{-- @livewire('') --}}
   
 
 @endsection

@@ -27,7 +27,7 @@
         <select class="form-select" aria-label="Default select example" wire:model="subcategory">
             <option selected value="">Open this select menu</option>
             @forelse ($subcategories as $subcategory)
-                <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
+                <option wire:key="sub{{ $subcategory->id }}" value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
             @empty
             @endforelse
         </select>
@@ -37,7 +37,7 @@
         <select class="form-select" aria-label="Default select example" wire:model="brand">
             <option selected value="">Open this select menu</option>
             @forelse ($brands as $brand)
-                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                <option wire:key="brand{{ $brand->id }}" value="{{ $brand->id }}">{{ $brand->name }}</option>
             @empty
             @endforelse
         </select>
@@ -56,7 +56,7 @@
         <div class="productscategorytabcont">
 
             @forelse ($products as $product)
-                <div class="procard card">
+                <div wire:key="prod{{ $product->id }}" class="procard card">
                     <h1 class="discount">{{ $product->discount }}%</h1>
                     <div class="prod-img">
                         <img src="{{ asset('images/'.$product->image ) }}" class="" alt="..."
@@ -68,7 +68,7 @@
                             <p class="prodname">{{ $product->name }}</p>
                         </a>
                         <img src="{{ asset('images/'.$product->brand->image) }}" alt="{{$product->brand->name}}">
-                        <p class="mb-0 text-success prodprice"><span class="cutprice text-danger">₹{{ $product->mrp }} </span> ₹{{ $product->sellingPrice }}
+                        <p class="mb-0 text-success prodprice"><span class="cutprice text-danger">₹{{ $product->mrp }} </span> ₹{{ $product->discountedPrice() }}
                         </p>
                     </div>
                 </div>

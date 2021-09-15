@@ -29,7 +29,7 @@ class InProgressOrders extends Component
             $q->orWhere('customerContact', 'like', '%' . $this->query . '%');
             $q->orWhere('company', 'like', '%' . $this->query . '%');
         });
-        $data['orders'] = $orders->orderBy('created_at', 'desc')->paginate(10);
+        $data['orders'] = $orders->orderBy('updated_at', 'desc')->paginate(10);
         return view('livewire.admin.in-progress-orders', $data);
     }
 }

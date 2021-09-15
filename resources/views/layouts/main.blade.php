@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  @livewireStyles
+  <livewire:styles />
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -62,10 +62,11 @@
       <x-footer />
     @endif
 
-  <a href="bulkquote.html" class="back-to-top d-flex align-items-center justify-content-center">
+  <a href="{{ route('quotes.create') }}" class="back-to-top d-flex align-items-center justify-content-center">
   <img src="{{ asset('assets/images/bulkquote.png') }}" alt="">
   <button class="btn bg-orange">Bulk Quote</button></a>
 
+  <livewire:scripts />
   <!-- Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -74,7 +75,6 @@
 
   <!-- site javascript -->
   <script src="{{ asset('assets/js/site.js') }}"></script>
-  @livewireScripts
 </body>
 
 </html>

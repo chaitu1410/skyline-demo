@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Exception;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class QuestionsController extends Controller
@@ -28,6 +29,7 @@ class QuestionsController extends Controller
                 $request->session()->flash('error', 'Please enter answer in textbox');
             }
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to post answer');
         }
         return back();

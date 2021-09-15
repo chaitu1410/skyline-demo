@@ -23,7 +23,7 @@ class ReturnedOrders extends Component
             $q->where('isPaid', true);
             $q->where('id', 'like', '%' . $this->query . '%');
         });
-        $data['returnorders'] = $returnorders->orderBy('created_at', 'desc')->paginate(10);
+        $data['returnorders'] = $returnorders->orderBy('updated_at', 'desc')->paginate(10);
         return view('livewire.admin.returned-orders', $data);
     }
 }

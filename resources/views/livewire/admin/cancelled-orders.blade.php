@@ -20,11 +20,11 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($orders as $order )
+            @forelse ($orders as $order)
                 
-                <tr>
+                <tr wire:key="{{ $order->id }}">
                     <td>{{ $order->id }}</td>
-                    <td>#345678902345</td>
+                    <td>{{ $order->razorpayPaymentId }}</td>
                     <td>
                         <div class="tablecellwidth">
                             <p class="mb-0">{{ $order->orderDetail->customerName }}</p>
@@ -68,107 +68,107 @@
                         @endif
 
                     </td>
-                </tr>
-                
-
-                <!--modal for view products ordered starts -->
-                <div class="modal fade" id="viewproductsmodal{{ $order->id }}" tabindex="-1" aria-labelledby="viewproductsmodalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">skyline username</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="d-flex mb-4 justify-content-between align-content-center">
-                                    <h6 class="fw-bold">Purchased Products</h6>
-
-                                </div>
-
-                                @forelse ($order->orderProducts as $p)    
-                                    <div class="orderhistoryitem">
-                                        <p class="mb-0">
-                                            <a href="">{{ $p->product->name }}</a>
-                                        </p>
-                                        <p class="mb-0 text-success">₹{{ $p->varient->sellingPrice }}</p>
-                                        <p class="mb-0 text-secondary">Qty: {{ $p->quantity }}</p>
-                                        <p class="mb-0 text-secondary">Varient: {{ $p->varient->name }}</p>
+                        <!--modal for view products ordered starts -->
+                        <div class="modal fade" id="viewproductsmodal{{ $order->id }}" tabindex="-1" aria-labelledby="viewproductsmodalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">skyline username</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                @empty
-                                    
-                                @endforelse
-
-                                <h6 class="fw-bold">Total Amount: ₹{{ $order->orderDetail->payableAmount }}</h6>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!--modal for view products ordered  ends-->
-
-                @if($order->cancelledOrder->cancelledBy == config('constants.userType.admin'))
-                    <!--Cancelled by admin start -->
-                    <div class="modal fade" id="reasonreturnmodal{{ $order->id }}" tabindex="-1" aria-labelledby="reasonreturnmodalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">skyline username</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="d-flex mb-3justify-content-between align-content-center">
-                                    <h6 class="fw-bold">Reason For Cancelling Order</h6>
-                                </div>
-                                <div>
-                                    <p>{{ $order->cancelledOrder->reason }}</p>
+                                    <div class="modal-body">
+        
+                                        <div class="d-flex mb-4 justify-content-between align-content-center">
+                                            <h6 class="fw-bold">Purchased Products</h6>
+        
+                                        </div>
+        
+                                        @forelse ($order->orderProducts as $p)    
+                                            <div class="orderhistoryitem">
+                                                <p class="mb-0">
+                                                    <a href="">{{ $p->product->name }}</a>
+                                                </p>
+                                                <p class="mb-0 text-success">₹{{ $p->varient->sellingPrice }}</p>
+                                                <p class="mb-0 text-secondary">Qty: {{ $p->quantity }}</p>
+                                                <p class="mb-0 text-secondary">Varient: {{ $p->varient->name }}</p>
+                                            </div>
+                                        @empty
+                                            
+                                        @endforelse
+        
+                                        <h6 class="fw-bold">Total Amount: ₹{{ $order->orderDetail->payableAmount }}</h6>
+                                    </div>
+        
                                 </div>
                             </div>
-
                         </div>
-                    </div>
-                    </div>
-                    <!--Cancelled by admin end-->
-                @elseif($order->cancelledOrder->cancelledBy == config('constants.userType.user'))
-                    <!-- Cancelled by user start -->
-                    <div class="modal fade" id="reasoncancelmodalwithreply{{ $order->id }}" tabindex="-1" aria-labelledby="replyreturnmodalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">skyline username</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form action="{{ route('admin.orders.cancelReply', $order) }}" method="post">
-                                @csrf
-                                @method('PATCH')
-                                <div class="modal-body">
-                                    <div class="returnedproduct">
+                        <!--modal for view products ordered  ends-->
+        
+                        @if($order->cancelledOrder->cancelledBy == config('constants.userType.admin'))
+                            <!--Cancelled by admin start -->
+                            <div class="modal fade" id="reasonreturnmodal{{ $order->id }}" tabindex="-1" aria-labelledby="reasonreturnmodalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">skyline username</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="d-flex mb-3justify-content-between align-content-center">
+                                            <h6 class="fw-bold">Reason For Cancelling Order</h6>
+                                        </div>
                                         <div>
-                                            <p class="mb-0 fw-bold">Reason to cancel order :</p>
                                             <p>{{ $order->cancelledOrder->reason }}</p>
                                         </div>
                                     </div>
-                                    <hr>
         
-                                    <p class="mb-3 fw-bold">Reply to User:</p>
-                                    <div class="mb-3">
-                                        <textarea class="form-control form-control-sm" name="reply" id="exampleFormControlTextarea1" rows="5"
-                                            placeholder="Write your reply here...">{{ $order->cancelledOrder->reply }}</textarea>
+                                </div>
+                            </div>
+                            </div>
+                            <!--Cancelled by admin end-->
+                        @elseif($order->cancelledOrder->cancelledBy == config('constants.userType.user'))
+                            <!-- Cancelled by user start -->
+                            <div class="modal fade" id="reasoncancelmodalwithreply{{ $order->id }}" tabindex="-1" aria-labelledby="replyreturnmodalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">skyline username</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-        
+                                    <form action="{{ route('admin.orders.cancelReply', $order) }}" method="post">
+                                        @csrf
+                                        @method('PATCH')
+                                        <div class="modal-body">
+                                            <div class="returnedproduct">
+                                                <div>
+                                                    <p class="mb-0 fw-bold">Reason to cancel order :</p>
+                                                    <p>{{ $order->cancelledOrder->reason }}</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                
+                                            <p class="mb-3 fw-bold">Reply to User:</p>
+                                            <div class="mb-3">
+                                                <textarea class="form-control form-control-sm" name="reply" id="exampleFormControlTextarea1" rows="5"
+                                                    placeholder="Write your reply here...">{{ $order->cancelledOrder->reply }}</textarea>
+                                            </div>
+                
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn bluebg btn-sm">Send Message</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn bluebg btn-sm">Send Message</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <!-- Cancelled by user end -->
-            @endif
+                        <!-- Cancelled by user end -->
+                    @endif
+                </tr>
+                
+
 
         @empty
             <p>No cancelled orders.</p>

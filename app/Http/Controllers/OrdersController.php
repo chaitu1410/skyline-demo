@@ -7,10 +7,11 @@ use App\Models\Order;
 use Razorpay\Api\Api;
 use App\Models\Pincode;
 use App\Models\Product;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use App\Models\ContactDetail;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOrderRequest;
 
@@ -20,7 +21,7 @@ class OrdersController extends Controller
     {
         $data['orders'] = Auth::user()->orders()
             ->where('isPaid', true)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
         return view('orders.index', $data);
     }
@@ -63,8 +64,8 @@ class OrdersController extends Controller
             }
 
             $payableAmount = $mrpTotal + $gstTotal - $discountTotal;
-            if ($payableAmount < $pincode->freeDeliveryLimit) {
-                $deliveryCharge = $pincode->deliveryCharge;
+            if (!($pincode->freeDeliveryLimit) || $payableAmount < $pincode->freeDeliveryLimit) {
+                $deliveryCharge += $pincode->deliveryCharge;
             }
             $payableAmount += $deliveryCharge;
 
@@ -97,7 +98,8 @@ class OrdersController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
-            $request->session()->flash('error', $e->getMessage());
+            Log::error($e->getMessage());
+            $request->session()->flash('error', "Faild to place order");
             return redirect(route('carts.index'));
         }
         return redirect(route('orders.checkout', $order));
@@ -111,25 +113,35 @@ class OrdersController extends Controller
 
     public function invoice(Request $request, Order $order)
     {
-        $data['order'] = $order;
-        $data['details'] = $order->orderDetail;
-        $data['products'] = $order->orderProducts;
-        $data['pincode'] = Pincode::where('pincode', '=', $order->orderDetail->pincode)->first();
-        $data['sellerDetails'] = ContactDetail::first();
-        //return view('orders.invoice', $data);
-        $pdf = PDF::loadView('orders.invoice', $data)->setOptions(['defaultFont' => 'sans-serif']);
+        try {
+            $data['order'] = $order;
+            $data['details'] = $order->orderDetail;
+            $data['products'] = $order->orderProducts;
+            $data['pincode'] = Pincode::where('pincode', '=', $order->orderDetail->pincode)->first();
+            $data['sellerDetails'] = ContactDetail::first();
+            $pdf = PDF::loadView('orders.invoice', $data)->setOptions(['defaultFont' => 'sans-serif']);
 
-        return $pdf->download('order_' . $order->id . '_invoice.pdf');
+            return $pdf->download('order_' . $order->id . '_invoice.pdf');
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            $request->session()->flash('error', 'Failed to download invoice');
+            return back();
+        }
     }
 
     public function pay(Request $request)
     {
         $order = Order::where('razorpayOrderId', $request->get('razorpay_order_id'))->first();
-        $order->update([
-            'razorpayPaymentId' => $request->get('razorpay_payment_id'),
-            'isPaid' => true,
-        ]);
-        $request->session()->flash('success', "Order placed Successfully!");
+        try {
+            $order->update([
+                'razorpayPaymentId' => $request->get('razorpay_payment_id'),
+                'isPaid' => true,
+            ]);
+            $request->session()->flash('success', "Order placed Successfully!");
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            $request->session()->flash('error', 'Failed to place order');
+        }
         return redirect(route('orders.index'));
     }
 }

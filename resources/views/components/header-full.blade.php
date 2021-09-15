@@ -56,27 +56,12 @@
 
         <!-- navbar items in desktop -->
         <div id="desknavitems" class="navbar-collapse offcanvas-collapse">
-
-
-          <!-- lang -->
-          {{-- <div id="langchange" class="dropdown">
-            <a class="text-light dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              En
-            </a>
-            <ul id="langchangeitems" class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <li><button class="dropdown-item" type="button">Marathi</button></li>
-              <li><button class="dropdown-item" type="button">Japanese</button></li>
-              <li><button class="dropdown-item" type="button">German</button></li>
-            </ul>
-          </div> --}}
-          <!-- lang end -->
           @auth
                <!-- account and orders dropdown -->
               <div class="dropdown accountordersdropd">
                 <a class="dropdown-toggle accountordersdropd-inner" type="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
-                  <marquee>Hello, {{ auth()->user()->name }}</marquee> <br><strong class="acntordersspan">Account & Orders</strong>
+                  Hello, {{ auth()->user()->name }} <br><strong class="acntordersspan">Account & Orders</strong>
                 </a>
                 <div id="acountordersdiv" class="dropdown-menu" aria-labelledby="dropdownMenu2">
                   <p><strong>Your Account</strong></p>
@@ -88,7 +73,7 @@
                     @if (Auth::user()->isAdmin)
                       <a href="{{ route('admin.dashboard') }}">Admin Panel</a>
                     @endif
-                    <a href="{{ route('users.edit', Auth::user()) }}">Your Account</a>
+                    <a href="{{ route('users.edit') }}">Your Account</a>
                     <a href="{{ route('orders.index') }}">Your Orders</a>
                     <a href="{{ route('orders.return.index') }}">Your Returned Orders</a>
                     <a href="{{ route('orders.cancel.index') }}">Your Cancelled Orders</a>
@@ -117,26 +102,6 @@
               </div>
               <!-- account and orders dropdown end-->
           @endguest
-
-
-          <!-- select location start -->
-          <a id="locationselect" data-bs-toggle="offcanvas" data-bs-target="#locationoffcanvas"
-            aria-controls="locationoffcanvas" class="accountordersdropd-inner d-flex">
-            <p class="mb-0" id="locicon">
-              <span class="material-icons">
-                location_on
-              </span>
-            </p>
-            <p class="mb-0">
-              <span>Hello</span>
-              <br>
-              <strong class="acntordersspan">
-                Select Your Address</strong>
-            </p>
-
-          </a>
-          <!-- select location end -->
-
 
           <!-- cart start desktop-->
           <div id="shoppingcart" onclick="location.href='{{ route('carts.index') }}'">
@@ -173,7 +138,7 @@
         @endauth
         @guest
           <div id="mobsidebarusername">
-            <marquee><p><em>Hello, User</em></p></marquee>
+            <p><em>Hello, User</em></p>
           </div>
         @endguest
         
@@ -191,7 +156,7 @@
           </span>
         </div>
 
-        <div onclick="location.href='allcategories.html'" class="mobsidebaritem">
+        <div onclick="location.href='{{ route('categories.index') }}'" class="mobsidebaritem">
           <a href="{{ route('categories.index') }}">Shop By Category</a>
           <span class="material-icons">
             navigate_next
@@ -208,8 +173,8 @@
             </div>
           @endif
 
-          <div onclick="location.href='{{ route('users.edit', Auth::user()) }}'" class="mobsidebaritem">
-            <a href="{{ route('users.edit', Auth::user()) }}">Your Account</a>
+          <div onclick="location.href='{{ route('users.edit') }}'" class="mobsidebaritem">
+            <a href="{{ route('users.edit') }}">Your Account</a>
             <span class="material-icons">
               navigate_next
             </span>
@@ -305,41 +270,6 @@
 
     </div>
     <!-- sidebar in mobile end -->
-
-
-
-    <!-- location offcanvas -->
-    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="locationoffcanvas"
-      aria-labelledby="locationoffcanvasLabel">
-
-      <div class="offcanvas-body small">
-        <h6><strong>Choose Your Location</strong></h6>
-        <span class="text-secondary">Select a delivery location to see product availability and delivery options</span>
-
-        <div id="defaultaddress">
-          <span id="defname"><strong> User -</strong></span>
-          <span id="defcity"><strong>AURANGABAD -</strong> </span>
-          <span id="defpin">431009</span>
-          <p class="text-secondary mb-0">
-            <strong>
-              Current Address
-            </strong>
-          </p>
-        </div>
-
-        <a href="" class="text-primary"><small>Change or edit address</small></a>
-        <hr>
-
-        <div class="input-group mt-3 mb-3">
-          <input type="text" class="form-control" placeholder="Enter Your Pincode" aria-label="Recipient's username"
-            aria-describedby="button-addon2">
-          <button class="btn btn-secondary" type="button" id="button-addon2">
-            Check
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- location offcanvas end-->
 
   </section>
   <!-- header - navigation bar end -->

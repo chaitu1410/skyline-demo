@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Query;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 //use App\Http\Requests\StoreQueryRequest;
 
@@ -24,6 +24,7 @@ class QuestionsController extends Controller
                 $request->session()->flash('error', 'Please enter question in textbox');
             }
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to post question');
         }
         return back();

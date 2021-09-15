@@ -8,7 +8,7 @@
     <div id="catvisetabs">
         <ul class="nav nav-tabs" id="tabcategory" role="tablist">
             @forelse ($categories as $cat)
-                <li class="nav-item" role="presentation">
+                <li wire:key="{{ $cat->id }}" class="nav-item" role="presentation">
                     <button class="nav-link categorytabhead @if($category->id === $cat->id) active @endif" type="button" role="tab" aria-controls="cat1" aria-selected="true" wire:click="setCategory({{ $cat->id }})">{{ $cat->name }}</button>
                 </li>
             @empty
@@ -24,7 +24,7 @@
 
                 @if ($category)
                     @forelse ($category->products as $product)
-                        <div class="procard card">
+                        <div wire:key="prod{{ $product->id }}" class="procard card">
                             <h1 class="discount">{{ $product->discount }}%</h1>
                             <div class="prod-img">
                                 <img src="{{ asset('images/'.$product->image) }}" class="" alt="{{ $product->name }}" onclick="location.href='{{ route('products.show', $product) }}'">
@@ -38,7 +38,7 @@
                                 <p class="prodname">{{ $product->name }}</p>
                             </a>
                             <img src="{{ asset('images/'.$product->brand->image) }}" alt="{{ $product->brand->name }}">
-                            <p class="mb-0 text-success prodprice"><span class="cutprice text-danger">₹{{ $product->mrp }} </span> ₹{{ $product->sellingPrice }} </p>
+                            <p class="mb-0 text-success prodprice"><span class="cutprice text-danger">₹{{ $product->mrp }} </span> ₹{{ $product->discountedPrice() }} </p>
                             </div>
                         </div>
 
@@ -57,7 +57,7 @@
                                             <img src="{{ asset('images/'.$product->image) }}" class="d-block" alt="{{ $product->name }}">
                                         </div>
                                         @forelse ($product->productImages as $image)
-                                            <div class="carousel-item active">
+                                            <div wire:key="img{{ $image->id }}" class="carousel-item active">
                                                 <img src="{{ asset('images/'.$image->image) }}" class="d-block" alt="{{ $product->name }}">
                                             </div>
                                         @empty

@@ -104,7 +104,6 @@
                         </div>
 
                     </div>
-                    {{$order->cancelledOrder->cancelledBy}}
                     @if ($order->cancelledOrder->cancelledBy == config('constants.userType.user'))
                         <div class="mb-3 p-3">
                             <div class="mb-3">

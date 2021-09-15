@@ -21,21 +21,25 @@ class CartList extends Component
         $userID = Auth::id();
         foreach ($this->cartItems as $key => $item) {
             $product = Product::find($item['associatedModel']['id']);
-            $varient = $product->varients->find($item['attributes']['varient']['id']);
 
-            if ($product && $varient) {
-                \Cart::session($userID)->update($item['id'], [
-                    'name' => $product->name,
-                    'price' => $varient->sellingPrice,
-                    'attributes' => array(
-                        'varient' => $varient
-                    ),
-                    'associatedModel' => $product,
-                ]);
+            if ($product) {
+                $varient = $product->varients->find($item['attributes']['varient']['id']);
+                if ($varient && $varient->stock) {
+                    \Cart::session($userID)->update($item['id'], [
+                        'name' => $product->name,
+                        'price' => $varient->sellingPrice,
+                        'attributes' => array(
+                            'varient' => $varient
+                        ),
+                        'associatedModel' => $product,
+                    ]);
+                } else {
+                    \Cart::session($userID)->remove($item['id']);
+                }
             } else {
                 \Cart::session($userID)->remove($item['id']);
             }
-            $this->cartItems = \Cart::session(Auth::id())->getContent()->toArray();
+            $this->cartItems = array_reverse(\Cart::session(Auth::id())->getContent()->toArray());
         }
 
         // foreach ($this->cartItems as $key => $value) {

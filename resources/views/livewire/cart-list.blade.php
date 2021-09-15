@@ -10,7 +10,7 @@
             </h6>
           </div>
           <div class="headingunderline"></div>
-          <a id="deselectallitems" href="#" wire:click.prevent="clearAllCart">
+          <a id="deselectallitems" wire:click.prevent="clearAllCart">
             <p class="mb-0">Delete All Items</p>
           </a>
         </div>
@@ -33,16 +33,14 @@
                 <strong>₹{{ Cart::session(Auth::id())->getTotal() }}</strong>
               </p>
             </div>
-            <p class="text-success small">Your order is eligible for FREE Delivery.</p>
-            {{-- <form action="" method="post"> --}}
-              {{-- @csrf --}}
+            {{-- @if ($item['attributes']['varient']['stock']) --}}
               <a href="{{ route('orders.confirm') }}" class="btn bg-orange w-100">Proceed To Buy</a>
-            {{-- </form> --}}
+            {{-- @endif --}}
           </div>
     
           <div id="yourcartitems">
               @foreach ($cartItems as $item)    
-                <div class="yourcartitem">
+                <div wire:key="{{ $item['id'] }}" class="yourcartitem">
                     <div class="yourcartitemimg">
                     <img src="{{ asset('images/'.$item['associatedModel']['image']) }}" alt="">
                     </div>
@@ -67,7 +65,7 @@
         
         
                     <div class="prodmoredetails">
-                        @if ($item['associatedModel']['stock'])
+                        @if ($item['attributes']['varient']['stock'])
                             <p class="mb-2 text-success small">In Stock.</p>
                         @else
                             <p class="mb-2 text-danger small">Out Of Stock.</p>

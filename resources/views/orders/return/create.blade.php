@@ -125,7 +125,8 @@
                     </div>
                     @forelse ($order->orderProducts as $orderproduct)    
                         @if(!($orderproduct->returned))
-                            @livewire('return-order-product-card', ['orderproduct' => $orderproduct])
+                            <livewire:return-order-product-card :orderproduct="$orderproduct" :wire:key="$orderproduct">
+                            {{-- @livewire('return-order-product-card', ['orderproduct' => $orderproduct]) --}}
                         @endif
                     @empty
                         

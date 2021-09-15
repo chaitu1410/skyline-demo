@@ -76,15 +76,20 @@
                 <div id="alldatatable" class="tab-content pt-4" id="proTabContent">
 
                     @if ($status == config('constants.orderStatus.ordered'))
-                        @livewire('admin.new-orders', ['query' => $query])
+                        <livewire:admin.new-orders :query="$query">
+                        {{-- @livewire('admin.new-orders', ['query' => $query]) --}}
                     @elseif($status == config('constants.orderStatus.delivered'))
-                        @livewire('admin.delivered-orders', ['query' => $query])
+                        <livewire:admin.delivered-orders :query="$query">
+                        {{-- @livewire('admin.delivered-orders', ['query' => $query]) --}}
                     @elseif($status == config('constants.orderStatus.cancelled'))
-                        @livewire('admin.cancelled-orders', ['query' => $query])
+                        <livewire:admin.cancelled-orders :query="$query">
+                        {{-- @livewire('admin.cancelled-orders', ['query' => $query]) --}}
                     @elseif($status == config('constants.orderStatus.returned'))
-                        @livewire('admin.returned-orders', ['query' => $query])
+                        <livewire:admin.returned-orders :query="$query">
+                        {{-- @livewire('admin.returned-orders', ['query' => $query]) --}}
                     @else
-                        @livewire('admin.in-progress-orders', ['query' => $query])
+                        <livewire:admin.in-progress-orders :query="$query">
+                        {{-- @livewire('admin.in-progress-orders', ['query' => $query]) --}}
                     @endif
 
                 </div>

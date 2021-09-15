@@ -22,7 +22,7 @@
       Your Account
     </h4>
 
-    <form action="{{ route('users.update', $user) }}" method="POST">
+    <form action="{{ route('users.update') }}" method="POST">
       @csrf
       @method('PATCH')
       <div class="youraccountformparts">
@@ -66,11 +66,11 @@
 
             <input type="text" name="town" class="form-control mb-2" id="exampleFormControlInput4" placeholder="Town/City" value="{{ $address->town }}">
 
-            <input type="text" name="area" class="form-control mb-2" id="exampleFormControlInput4" placeholder="Area, Colony, Street, Sector, Village" name="{{ $address->area }}">
+            <input type="text" name="area" class="form-control mb-2" id="exampleFormControlInput4" placeholder="Area, Colony, Street, Sector, Village" value="{{ $address->area }}">
 
-            <input type="text" name="houseNumber" class="form-control mb-2" id="exampleFormControlInput4" placeholder="Flat, House no, Building, Company, Apartment" name="{{ $address->houseNumber }}">
+            <input type="text" name="houseNumber" class="form-control mb-2" id="exampleFormControlInput4" placeholder="Flat, House no, Building, Company, Apartment" value="{{ $address->houseNumber }}">
 
-            <input type="text" name="landmark" class="form-control mb-2 mb-lg-3" id="exampleFormControlInput4" placeholder="Landmark eg. near Max Hospital" name="{{ $address->landmark }}">
+            <input type="text" name="landmark" class="form-control mb-2 mb-lg-3" id="exampleFormControlInput4" placeholder="Landmark eg. near Max Hospital" value="{{ $address->landmark }}">
 
           </div>
 
@@ -78,7 +78,7 @@
 
             <div class="insightbox">
               <div class="count">
-                <p class="mb-0">100</p>
+                <p class="mb-0">{{ Auth::user()->orders()->where('isPaid', true)->count() }}</p>
               </div>
               <div class="insighttxt">
                 <p class="mb-0">Your Orders</p>
@@ -96,7 +96,7 @@
 
             <div class="insightbox">
               <div class="count">
-                <p class="mb-0">2</p>
+                <p class="mb-0">{{ Auth::user()->quotes()->count() }}</p>
               </div>
               <div class="insighttxt">
                 <p class="mb-0">Quote Requests</p>

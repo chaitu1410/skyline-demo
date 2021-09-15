@@ -10,7 +10,7 @@
                         <select class="form-select form-select-sm" aria-label=".form-select-sm example" wire:model="categoryId">
                             <option selected="selected">Open this select menu</option>
                             @forelse ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option wire:key="{{ $category->id }}" value="{{ $category->id }}">{{ $category->name }}</option>
                             @empty
                                 
                             @endforelse
@@ -35,7 +35,7 @@
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" wire:model="productId" @if($productDisabled) disabled @endif>
                         <option selected="selected">Open this select menu</option>
                         @forelse ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            <option  wire:key="{{ $product->id }}" value="{{ $product->id }}">{{ $product->name }}</option>
                         @empty
                             
                         @endforelse
@@ -55,7 +55,7 @@
 
                             @forelse ($varients as $varient)
                                 @if ($varient->name != 'base')
-                                    <div class="addedvariant">
+                                    <div wire:key="add{{ $varient->id }}" class="addedvariant">
                                         <div data-bs-toggle="modal" data-bs-target="#editvariantmodal{{ $varient->id }}">
                                             {{-- <div class="addedvarname">
                                                 <p class="mb-0"><strong>Diameter</strong></p>
@@ -82,7 +82,7 @@
                                         <div class="collapse" id="variantproperties{{ $varient->id }}">
                                             <div class="addedvarprops">
                                                 @forelse ($varient->properties as $property)
-                                                    <p class="mb-1">{{ $property->property }}: {{ $property->value }}</p>
+                                                    <p wire:key="prop{{ $property->id }}" class="mb-1">{{ $property->property }}: {{ $property->value }}</p>
                                                 @empty
                                                     <p class="mb-1">No properties are added to this varient</p>
                                                 @endforelse
@@ -91,7 +91,7 @@
                                     </div> 
                                     
                                     <!--modal for edit variant starts -->
-                                    <div class="modal fade" id="editvariantmodal{{ $varient->id }}" tabindex="-1" aria-labelledby="addvariantmodalLabel"
+                                    <div wire:key="edit{{ $varient->id }}" class="modal fade" id="editvariantmodal{{ $varient->id }}" tabindex="-1" aria-labelledby="addvariantmodalLabel"
                                         aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                             <div class="modal-content">
@@ -213,7 +213,7 @@
                                                     </div>
 
                                                     @forelse ($baseProperties as $property)
-                                                        <div class="prodvariants mt-2 d-flex">
+                                                        <div wire:key="{{ $property->id }}" class="prodvariants mt-2 d-flex">
 
                                                             <input type="text" class="form-control form-control-sm w-50 d-inline m-1"
                                                                 placeholder="Property Name" readonly name="properties[]" value="{{ $property->property }}">

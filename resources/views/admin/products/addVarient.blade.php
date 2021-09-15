@@ -2,6 +2,7 @@
 
 @section('content')
 <!-- Page content-->
-@livewire('admin.add-varient')
+<livewire:admin.add-varient :query="$query">
+{{-- @livewire('admin.add-varient') --}}
 <!-- Page content ends-->
 @endsection

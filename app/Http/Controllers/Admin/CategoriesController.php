@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use Exception;
 use App\Models\Category;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditCategoryRequest;
 use App\Http\Requests\StoreCategoryRequest;
-use App\Models\Subcategory;
 
 class CategoriesController extends Controller
 {
@@ -37,6 +38,7 @@ class CategoriesController extends Controller
             $data['subcategory'] = null;
             return view('admin.categories.show', $data);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Unable to fetch data!');
             return back();
         }
@@ -48,23 +50,15 @@ class CategoriesController extends Controller
             $data['category'] = $category;
             $subcategories = $category->subcategories;
 
-            // if ($request->get('subcategory')) {
-            //     $data['subcategory'] = $subcategories->find($request->get('subcategory'));
-            // } else {
-            //     $data['subcategory'] = $subcategories->first();
-            // }
-
             $data['subcategory'] = $subcategory;
             $data['subcategories'] = $subcategories;
             return view('admin.categories.show', $data);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Unable to fetch data!');
             return back();
         }
     }
-
-
-
     /**
      *  Store Category
      */
@@ -73,15 +67,16 @@ class CategoriesController extends Controller
         try {
             $slug = slug($request->get('name'));
             $imageName = $slug . '.' . $request->file('image')->extension();
+            $request->file('image')->move(public_path('images'), $imageName);
             Category::create([
                 'name' => $request->get('name'),
                 'slug' => $slug,
                 'image' => $imageName,
                 'bestSeller' => $request->get('bestSeller') ? true : false,
             ]);
-            $request->file('image')->move(public_path('images'), $imageName);
             $request->session()->flash('success', 'Category added successfully!');
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to add category');
         }
         return back();
@@ -108,7 +103,8 @@ class CategoriesController extends Controller
                 'bestSeller' => $request->get('bestSeller') ? true : false,
             ]);
             $request->session()->flash('success', 'Category updated successfully!');
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to edit category');
         }
         return back();
@@ -123,7 +119,8 @@ class CategoriesController extends Controller
             deleteImage($category->image);
             $category->delete();
             $request->session()->flash('success', 'Category deleted successfully!');
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             $request->session()->flash('error', 'Failed to delete category');
         }
         return back();
